@@ -4,32 +4,19 @@ const PORT = 4000;
 
 const app = express();
 
-const logger = (req, res, next) => {
-  console.log(` ${req.method} ${req.url}`);
+const routerLogger = (req, res) => {
   next();
 };
 
-const privateMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed</h1>");
-  }
-  console.log("Allowed, you may continue.");
+const methodLogger = (req, res, next) => {
   next();
 };
 
-const handleHome = (req, res) => {
-  return res.send("I love middlewares");
+const home = (req, res) => {
+  return res.send("Hello!");
 };
 
-const handleProtected = (req, res) => {
-  return res.send("Welcome to the private lounge.");
-};
-
-app.use(logger);
-app.use(privateMiddleware);
-app.get("/", handleHome);
-app.get("/protected", handleProtected);
+app.get("/", methodLogger, routerLogger, home);
 
 const handleListening = () =>
   console.log(`✅Server listening on port http://localhost:${PORT} 🚀`);
